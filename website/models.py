@@ -3,9 +3,9 @@ from flask_login import UserMixin
 from sqlalchemy.sql import func
 
 class Note(db.Model):
-    db.Colmn(db.Integer, primary_key=True)
+    id = db.Column(db.Integer, primary_key=True)
     data = db.Column(db.String(10000))
-    date = db.Column(db.DateTime(timezone=True, default=func.now)) # uses current time
+    date = db.Column(db.DateTime(timezone=True), default=func.now) # uses current time
     user_id = db.Column(db.Integer, db.ForeignKey('user.id')) # lowercase because stored lowercse in sql
 
 class User(db.Model, UserMixin):
