@@ -25,10 +25,15 @@
             </button>
             <div class="collapse navbar-collapse" id="navbar">
                 <div class="navbar-nav">
-                    <a class="nav-item nav-link" id="login" href="/login">Login</a>
-                    <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
-                    <a class="nav-item nav-link" id="signup" href="/sign-up">Sign Up</a>
-                    <a class="nav-item nav-link" id="home" href="/">Home</a>
+                    {% if logged_in %}
+                        <a class="nav-item nav-link" id="home" href="/">Home</a>
+                        <a class="nav-item nav-link" id="library" href="/library">Library</a>
+                        <a class="nav-item nav-link" id="profile" href="/profile">Profile</a>
+                        <a class="nav-item nav-link" id="logout" href="/logout">Logout</a>
+                    {% else %}
+                        <a class="nav-item nav-link" id="login" href="/login">Login</a>
+                        <a class="nav-item nav-link" id="signup" href="/sign-up">Sign Up</a>
+                    {% endif %}
                 </div>
             </div>
         </nav>
