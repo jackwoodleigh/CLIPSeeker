@@ -5,6 +5,7 @@ from . import db
 from flask_login import login_user, login_required, logout_user, current_user
 from functools import wraps
 
+
 auth = Blueprint('auth', __name__)
 def logout_required(f):
     @wraps(f)
@@ -35,7 +36,7 @@ def login():
         else:
             flash('Email does not exist', category='error')
 
-    return render_template("login.html", text="test", bool=False, logged_in=current_user.is_authenticated)
+    return render_template("login.html", text="test", bool=False, current_user=current_user)
 
 @auth.route('/logout')
 @login_required
@@ -70,4 +71,4 @@ def sign_up():
             flash('Account sucessfully created!', category='success')
             return redirect(url_for('views.login'))
 
-    return render_template("sign_up.html", logged_in=current_user.is_authenticated)
+    return render_template("sign_up.html", current_user=current_user) 
