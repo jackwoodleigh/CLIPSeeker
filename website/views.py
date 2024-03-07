@@ -18,3 +18,5 @@ def library(): # whatevers in here will run first for ^
 @login_required
 def profile(): # whatevers in here will run first for ^
     return render_template("profile.html", current_user=current_user)
+
+
