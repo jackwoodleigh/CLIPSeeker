@@ -3,7 +3,23 @@
 {% block title %} Home {% endblock %}
 
 {% block content %}
-<h1>
+<h1 class="fw-bold">
     This is the library
 </h1>
+<div class="container py-5 text-center">
+    <h2 class="display-6 fw-bold py-5"> Gallery</h2>
+    <div class="gallery" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); grid-gap: 30px;">
+        <a href="https://www.hartz.com/wp-content/uploads/2022/04/small-dog-owners-1.jpg" data-toggle="lightbox" data-gallery="photos" data-title="cp1">
+            <img src="https://www.hartz.com/wp-content/uploads/2022/04/small-dog-owners-1.jpg" class="img-fluid">
+        </a>
+        <a href="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" data-toggle="lightbox" data-gallery="photos"  data-title="cp2">
+            <img src="https://dfstudio-d420.kxcdn.com/wordpress/wp-content/uploads/2019/06/digital_camera_photo-1080x675.jpg" class="img-fluid">
+        </a>
+        
+    </div>
+    <div class="row">
+        
+    </div>
+
+</div>
 {% endblock %}
