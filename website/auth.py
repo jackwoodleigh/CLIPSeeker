@@ -1,10 +1,8 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for
-from .models import User
+from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app
 from werkzeug.security import generate_password_hash, check_password_hash
-from . import db
 from flask_login import login_user, login_required, logout_user, current_user
 from functools import wraps
-
+import pandas as pd
 
 auth = Blueprint('auth', __name__)
 def logout_required(f):
@@ -25,9 +23,12 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password1')
 
-        user = User.query.filter_by(email=email).first()
-        if user:
-            if check_password_hash(user.password, password):
+        user = current_app.config['SF'].query_all("SELECT Id, Email__c, FirstName__c, LastName__c, Password__c FROM CLIPAccount__c WHERE Email__c = '{}'".format(email))
+        
+    
+        if user['records']:
+            user = pd.DataFrame(user['records']).loc[0]
+            if check_password_hash(user['Password__c'], password):
                 flash('Logged in sucessfully!', category='success')
                 login_user(user, remember=True)
                 return redirect(url_for('views.home'))
@@ -53,8 +54,9 @@ def sign_up():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
-        user = User.query.filter_by(email=email).first()
-        if user:
+        user = current_app.config['SF'].query_all("SELECT Email__c FROM CLIPAccount__c WHERE Email__c = '{}'".format(email))
+        
+        if user['records']:
             flash('Email already Exists', category='error')
         elif len(email) < 4:
             flash('Email must be at least 4 characters', category='error') #cat can be anything
@@ -65,10 +67,9 @@ def sign_up():
         elif len(password1) < 4:
             flash('Password must be at least 4 characters', category='error') 
         else:
-            new_user = User(email=email, username=username, password=generate_password_hash(password1))
-            db.session.add(new_user)
-            db.session.commit()
+
+            current_app.config['SF'].CLIPAccount__c.create({'Email__c': email, 'FirstName__c': username, 'LastName__c': username, 'Password__c': generate_password_hash(password1)})
             flash('Account sucessfully created!', category='success')
-            return redirect(url_for('views.login'))
+            return redirect(url_for('auth.login'))
 
     return render_template("sign_up.html", current_user=current_user) 

@@ -2,7 +2,54 @@ from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
 from os import path
 from flask_login import LoginManager
+from .views import views
+from .auth import auth
 
+from simple_salesforce import Salesforce, SalesforceLogin
+import pandas as pd
+global sf
+
+def create_app():
+    app = Flask(__name__)
+
+    app.config.from_object('config.Config')
+    session_id, instance = SalesforceLogin(username=app.config['DB_USERNAME'], password=app.config['DB_PASSWORD'], security_token=app.config['DB_SECURITY_TOKEN'])
+   
+    app.config['SF'] = Salesforce(instance=instance, session_id=session_id)  
+  
+    app.register_blueprint(views, url_prefix='/')
+    app.register_blueprint(auth, url_prefix='/')
+    
+    #from .models import User, Note
+
+    login_manager = LoginManager()
+    login_manager.login_view = 'auth.login'
+    login_manager.init_app(app)
+
+    @login_manager.user_loader
+    def load_user(id):
+        result = app.config['SF'].query_all("SELECT Id, Email__c, FirstName__c, LastName__c, Password__c FROM CLIPAccount__c WHERE Id = '{}'".format(id)).loc[0]
+        
+        if result['records']:
+            result = pd.DataFrame(result['records'])
+        # If a user is found, return a dictionary representing the user
+            user = result['records'][0]
+            return {'id': user['Id'], 'email': user['Email__c'], 'first_name': user['FirstName__c'], 'last_name': user['LastName__c'], 'password': user['Password__c'], }
+        else:
+            # If no user is found, return None
+            return None
+        
+        #return User.query.get(int(id))
+
+    return app
+
+
+
+
+
+
+
+'''
 db = SQLAlchemy()
 DB_NAME = 'database.db'
 
@@ -38,3 +85,4 @@ def create_database(app):
         with app.app_context():
             db.create_all()
         print('Created Database!')
+'''
