@@ -14,3 +14,13 @@ class User(db.Model, UserMixin):
     password = db.Column(db.String(150))
     username = db.Column(db.String(150))
     notes = db.relationship('Note')'''
+
+from flask_login import UserMixin
+class User(UserMixin):
+    def __init__(self, CLIPAccountId, email, firstname, lastname, password):
+        self.id = CLIPAccountId
+        self.email = email
+        self.firstname = firstname
+        self.lastName = lastname
+        self.password = password
+     

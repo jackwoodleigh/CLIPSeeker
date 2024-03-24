@@ -17,6 +17,9 @@ email = 'woodleighj3@wit.edu'
 data = sf.query_all("SELECT Email__c FROM CLIPAccount__c WHERE Email__c = '{}'".format(email))
 
 print(data['records'])
+
+
+
 '''
 #sf.CLIPAccount__c.create({'Email__c': 'woodleighj@wit.edu', 'FirstName__c': 'Jack', 'LastName__c': 'Woodleigh', 'Password__c': '123'})
 id=''
