@@ -7,7 +7,7 @@ from .auth import auth
 
 from simple_salesforce import Salesforce, SalesforceLogin
 import pandas as pd
-global sf
+
 
 def create_app():
     app = Flask(__name__)
