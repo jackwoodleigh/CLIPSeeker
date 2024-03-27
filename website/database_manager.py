@@ -25,10 +25,13 @@ class DatabaseManager:
         try:
             gauth = GoogleAuth()
 
+            gauth.settings['client_config_file'] = '/etc/secrets/client_secrets.json'
+
             # Check if credentials already exist in the session
             if 'user' in session and 'drive_credentials' in session['user']:
                 credentials_dict = json.loads(session['user']['drive_credentials'])
                 gauth.credentials = OAuth2Credentials.from_json(session['user']['drive_credentials'])
+
                 if gauth.credentials is None or gauth.access_token_expired:
                     gauth.LocalWebserverAuth()
                     session['user']['drive_credentials'] = gauth.credentials.to_json()
