@@ -1,4 +1,32 @@
-from PIL import Image
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+'''from PIL import Image
 import requests
 from transformers import CLIPProcessor, CLIPModel
 from IPython.display import display
@@ -65,4 +93,4 @@ for idx in range(len(images)):
                         wspace=0.2,
                         hspace=0.8)
 
-plt.show()
+plt.show()'''

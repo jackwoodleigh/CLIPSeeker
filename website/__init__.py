@@ -2,8 +2,7 @@ from flask import Flask
 from flask_login import LoginManager
 from .views import views
 from .auth import auth
-
-from simple_salesforce import Salesforce, SalesforceLogin
+from .database_manager import DatabaseManager
 import pandas as pd
 
 
@@ -11,9 +10,8 @@ def create_app():
     app = Flask(__name__)
 
     app.config.from_object('config.Config')
-    session_id, instance = SalesforceLogin(username=app.config['DB_USERNAME'], password=app.config['DB_PASSWORD'], security_token=app.config['DB_SECURITY_TOKEN'])
-   
-    app.config['SF'] = Salesforce(instance=instance, session_id=session_id)  
+    
+    app.config['DBM'] = DatabaseManager(app)
   
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')

@@ -1,9 +1,10 @@
-from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app, session
+from flask import Blueprint, render_template, request, flash, redirect, url_for, current_app, session, g
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import login_user, login_required, logout_user, current_user
 from functools import wraps
 import pandas as pd
 from .models import User
+from .database_manager import DatabaseManager
 
 auth = Blueprint('auth', __name__)
 def logout_required(f):
@@ -33,7 +34,7 @@ def login():
         email = request.form.get('email')
         password = request.form.get('password1')
 
-        user = current_app.config['SF'].query_all("SELECT Id, Email__c, FirstName__c, LastName__c, Password__c FROM CLIPAccount__c WHERE Email__c = '{}'".format(email))
+        user = current_app.config['DBM'].SF.query_all("SELECT Id, Email__c, FirstName__c, LastName__c, Password__c FROM CLIPAccount__c WHERE Email__c = '{}'".format(email))
         
     
         if user['records']:
@@ -66,7 +67,7 @@ def sign_up():
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
 
-        user = current_app.config['SF'].query_all("SELECT Email__c FROM CLIPAccount__c WHERE Email__c = '{}'".format(email))
+        user = current_app.config['DBM'].SF.query_all("SELECT Email__c FROM CLIPAccount__c WHERE Email__c = '{}'".format(email))
         
         if user['records']:
             flash('Email already Exists', category='error')
@@ -81,9 +82,15 @@ def sign_up():
         elif len(password1) < 4:
             flash('Password must be at least 4 characters', category='error') 
         else:
-            current_app.config['SF'].CLIPAccount__c.create({'Email__c': email, 'FirstName__c': firstname, 'LastName__c': lastname, 'Password__c': generate_password_hash(password1)})
+            current_app.config['DBM'].SF.CLIPAccount__c.create({'Email__c': email, 'FirstName__c': firstname, 'LastName__c': lastname, 'Password__c': generate_password_hash(password1)})
 
             flash('Account sucessfully created!', category='success')
             return redirect(url_for('auth.login'))
 
     return render_template("sign_up.html") 
+
+@auth.route('/drive-login')
+@login_required
+def drive_login():
+    current_app.config['DBM'].createFile('test')
+    return redirect(url_for('views.home'))
