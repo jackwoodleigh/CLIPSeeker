@@ -8,7 +8,7 @@ import json, os
 
 def create_app():
     app = Flask(__name__)
-    DEVELOPMENT = True
+    DEVELOPMENT = False
     app.config.from_object('config.Config')
 
     if(DEVELOPMENT):
