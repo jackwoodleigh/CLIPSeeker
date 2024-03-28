@@ -25,11 +25,12 @@ class DatabaseManager:
         try:
 
             client_secrets_json = os.environ.get('CLIENT_SECRETS')
+            print(f"CLIENT_SECRETS: {client_secrets_json}")
             if not client_secrets_json:
                 raise ValueError("CLIENT_SECRETS environment variable is empty")
             client_secrets = json.loads(client_secrets_json)
             gauth = GoogleAuth()
-            gauth.LoadClientConfig(client_secrets['web'])
+            gauth.LoadClientConfig(client_secrets['web']['client_id'], client_secrets['web']['client_secret'])
 
             # Check if credentials already exist in the session
             if 'user' in session and 'drive_credentials' in session['user']:
