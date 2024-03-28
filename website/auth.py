@@ -135,8 +135,8 @@ def oauth2callback():
 
     return redirect(url_for('views.home'))
 
-@auth.route('/upload')
+@auth.route('/create-file')
 @login_required
-def upload():
+def create_file():
     current_app.config['DBM'].createFile("Hello World!")
     return redirect(url_for('views.home'))
