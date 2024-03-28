@@ -5,7 +5,7 @@ from flask import flash, session, g
 from simple_salesforce import Salesforce, SalesforceLogin
 import pandas as pd
 from functools import wraps
-import json
+import json, os
 
 def drive_login_required(f):
     @wraps(f)
@@ -23,10 +23,11 @@ class DatabaseManager:
 
     def connectDrive(self):
         try:
-            gauth = GoogleAuth()
 
-            gauth.settings['client_config_file'] = '/etc/secrets/client_secrets.json'
-            gauth.settings['client_config']['redirect_uri'] = 'https://clipsite.onrender.com'
+            client_secrets_json = os.environ.get('CLIENT_SECRETS')
+            client_secrets = json.loads(client_secrets_json)
+            gauth = GoogleAuth()
+            gauth.LoadClientConfig(client_secrets)
 
             # Check if credentials already exist in the session
             if 'user' in session and 'drive_credentials' in session['user']:
