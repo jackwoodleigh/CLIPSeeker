@@ -26,6 +26,7 @@ class DatabaseManager:
             gauth = GoogleAuth()
 
             gauth.settings['client_config_file'] = '/etc/secrets/client_secrets.json'
+            gauth.settings['client_config']['redirect_uri'] = 'https://clipsite.onrender.com'
 
             # Check if credentials already exist in the session
             if 'user' in session and 'drive_credentials' in session['user']:
