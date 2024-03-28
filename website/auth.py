@@ -103,17 +103,6 @@ def drive_login():
     full_auth_url = f"{auth_url}?response_type=code&client_id={CLIENT_SECRETS['web']['client_id']}&redirect_uri={redirect_uri}&scope={scope}"
     return redirect(full_auth_url)
 
-
-    '''
-    if 'user' in session and 'drive_credentials' in session['user']:
-        flash('You are already logged in to Google Drive.', category='success')
-    else:   
-        current_app.config['DBM'].connectDrive()
-
-    current_app.config['DBM'].createFile("Hello World!")
-    return redirect(url_for('views.home'))
-    
-    '''
     
 
 @auth.route('/auth/google/callback')
