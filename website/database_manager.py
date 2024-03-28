@@ -27,11 +27,11 @@ class DatabaseManager:
 
     def connectDrive(self):
         try:
-            print(session['user']['token'])
-            if 'user' in session and 'token' in session['user']:
+            print(session['token'])
+            if 'token' in session:
                 credentials = Credentials(
-                    token=session['user']['token'].get('access_token'),
-                    refresh_token=session['user']['token'].get('refresh_token'),
+                    token=session['token'].get('access_token'),
+                    refresh_token=session['token'].get('refresh_token'),
                     token_uri='https://oauth2.googleapis.com/token',
                     client_id=json.loads(os.environ['CLIENT_SECRETS'])['web']['client_id'],
                     client_secret=json.loads(os.environ['CLIENT_SECRETS'])['web']['client_secret'])

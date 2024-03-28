@@ -120,8 +120,9 @@ def callback():
     }
     r = requests.post(token_url, data=data)
     token_response = r.json()
-    session['user']['token'] = token_response
-    print(session['user']['token'])
+    print("Before setting token:", session.get('token'))
+    session['token'] = token_response
+    print("After setting token:", session.get('token'))
     return redirect(url_for('views.home'))
 
 @auth.route('/create-file')
