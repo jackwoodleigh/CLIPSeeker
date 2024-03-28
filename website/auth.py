@@ -5,6 +5,8 @@ from functools import wraps
 import pandas as pd
 from .models import User
 from .database_manager import DatabaseManager
+from pydrive2.auth import GoogleAuth
+from pydrive2.drive import GoogleDrive
 
 auth = Blueprint('auth', __name__)
 def logout_required(f):
@@ -89,8 +91,25 @@ def sign_up():
 
     return render_template("sign_up.html") 
 
-@auth.route('/drive-login')
+@auth.route('/google/login')
 @login_required
 def drive_login():
-    current_app.config['DBM'].createFile('test')
+    if 'user' in session and 'drive_credentials' in session['user']:
+        flash('You are already logged in to Google Drive.', category='success')
+    else:   
+        current_app.config['DBM'].connectDrive()
+
+    current_app.config['DBM'].createFile("Hello World!")
+    return redirect(url_for('views.home'))
+
+@auth.route('/auth/google/callback')
+@login_required
+def drive_auth():
+    # Get the authorization code from the query parameters
+    auth_code = request.args.get('code')
+    if auth_code:
+        gauth = GoogleAuth()
+        gauth.Auth(auth_code)
+        session['user'] = {'drive_credentials': gauth.credentials.to_json()}
+
     return redirect(url_for('views.home'))

@@ -26,9 +26,10 @@ class DatabaseManager:
 
             CLIENT_SECRETS = json.loads(os.environ['CLIENT_SECRETS'])
             gauth = GoogleAuth()
-            print(CLIENT_SECRETS['web']['client_id'])
+            gauth.LoadClientConfigSettings(CLIENT_SECRETS)
+            print(gauth.client_config['client_id'])
+            
             if 'user' in session and 'drive_credentials' in session['user']:
-                #credentials_dict = json.loads(session['user']['drive_credentials'])
                 gauth.credentials = OAuth2Credentials.from_json(session['user']['drive_credentials'])
 
                 if gauth.credentials is None or gauth.access_token_expired:
