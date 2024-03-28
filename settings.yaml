@@ -1,4 +1,4 @@
-client_config_backend: file
+client_config_backend: settings
 
 save_credentials: False
 
