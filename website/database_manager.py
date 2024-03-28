@@ -27,19 +27,18 @@ class DatabaseManager:
 
     def connectDrive(self):
         try:
-     
-            CLIENT_SECRETS = json.loads(os.environ['CLIENT_SECRETS'])
-           
             if 'user' in session and 'token' in session['user']:
                 token_info = session['user']['token']
-                credentials = Credentials(token=token_info['access_token'],
-                    refresh_token=token_info['refresh_token'],
+                print(session['user']['token'])
+                credentials = Credentials(
+                    token=token_info.get('access_token'),
+                    refresh_token=token_info.get('refresh_token'),
                     token_uri='https://oauth2.googleapis.com/token',
-                    client_id=CLIENT_SECRETS['web']['client_id'],
-                    client_secret=CLIENT_SECRETS['web']['client_secret'])
+                    client_id=json.loads(os.environ['CLIENT_SECRETS'])['web']['client_id'],
+                    client_secret=json.loads(os.environ['CLIENT_SECRETS'])['web']['client_secret'])
             else:
-                    print("Credentials not in session.")
-                    return None
+                print("Credentials not in session.")
+                return None
             
             if not credentials.valid:
                 if credentials.expired and credentials.refresh_token:

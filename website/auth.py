@@ -107,7 +107,7 @@ def drive_login():
 
 @auth.route('/auth/google/callback')
 @login_required
-def oauth2callback():
+def callback():
     auth_code = request.args.get('code')
     CLIENT_SECRETS = json.loads(os.environ['CLIENT_SECRETS'])
     token_url = "https://oauth2.googleapis.com/token"
@@ -121,7 +121,7 @@ def oauth2callback():
     r = requests.post(token_url, data=data)
     token_response = r.json()
     session['user']['token'] = token_response
-
+    print(session['user']['token'])
     return redirect(url_for('views.home'))
 
 @auth.route('/create-file')
