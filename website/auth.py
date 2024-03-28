@@ -92,12 +92,12 @@ def sign_up():
 @auth.route('/google/login')
 @login_required
 def drive_login():
-    CLIENT_SECRETS = json.loads(os.environ['CLIENT_SECRETS'])
+    #CLIENT_SECRETS = json.loads(os.environ['CLIENT_SECRETS'])
 
     auth_url = "https://accounts.google.com/o/oauth2/v2/auth"
-    scope = "https://www.googleapis.com/auth/drive"
+    scope = "https://www.googleapis.com/auth/photoslibrary"
     redirect_uri = "https://clipsite-amjzx.ondigitalocean.app/auth/google/callback"
-    full_auth_url = f"{auth_url}?response_type=code&client_id={CLIENT_SECRETS['web']['client_id']}&redirect_uri={redirect_uri}&scope={scope}"
+    full_auth_url = f"{auth_url}?response_type=code&client_id={current_app.config['CLIENT_SECRETS']['web']['client_id']}&redirect_uri={current_app.config['CLIENT_SECRETS']['web']['redirect_uris'][0]}&scope={scope}"
     return redirect(full_auth_url)
 
     
@@ -106,13 +106,13 @@ def drive_login():
 @login_required
 def callback():
     auth_code = request.args.get('code')
-    CLIENT_SECRETS = json.loads(os.environ['CLIENT_SECRETS'])
+    #CLIENT_SECRETS = json.loads(os.environ['CLIENT_SECRETS'])
     token_url = "https://oauth2.googleapis.com/token"
     data = {
         'code': auth_code,
-        'client_id': CLIENT_SECRETS['web']['client_id'],
-        'client_secret': CLIENT_SECRETS['web']['client_secret'],
-        'redirect_uri':  CLIENT_SECRETS['web']['redirect_uris'][0],
+        'client_id': current_app.config['CLIENT_SECRETS']['web']['client_id'],
+        'client_secret': current_app.config['CLIENT_SECRETS']['web']['client_secret'],
+        'redirect_uri':  current_app.config['CLIENT_SECRETS']['web']['redirect_uris'][0],
         'grant_type': 'authorization_code'
     }
     r = requests.post(token_url, data=data)
@@ -124,4 +124,10 @@ def callback():
 @login_required
 def create_file():
     current_app.config['DBM'].createFile("Hello World!")
+    return redirect(url_for('views.home'))
+
+@auth.route('/photos-test')
+@login_required
+def photos_test():
+    print(current_app.config['DBM'].retrievePhotos())
     return redirect(url_for('views.home'))

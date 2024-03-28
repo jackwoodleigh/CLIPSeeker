@@ -1,15 +1,22 @@
-from flask import Flask
+from flask import Flask, g
 from flask_login import LoginManager
 from .views import views
 from .auth import auth
 from .database_manager import DatabaseManager
 import pandas as pd
-
+import json, os
 
 def create_app():
     app = Flask(__name__)
-
+    DEVELOPMENT = True
     app.config.from_object('config.Config')
+
+    if(DEVELOPMENT):
+        app.config['CLIENT_SECRETS'] = json.load(open('client_secrets.json'))
+    else:
+        app.config['CLIENT_SECRETS'] = json.loads(os.environ['CLIENT_SECRETS'])
+
+
     
     app.config['DBM'] = DatabaseManager(app)
   
