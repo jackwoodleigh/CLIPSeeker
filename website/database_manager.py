@@ -24,6 +24,7 @@ class DatabaseManager:
     def connectDrive(self):
         try:
 
+            CLIENT_SECRETS = json.loads(os.environ['CLIENT_SECRETS'])
             gauth = GoogleAuth()
             print(CLIENT_SECRETS['web']['client_id'])
             if 'user' in session and 'drive_credentials' in session['user']:
