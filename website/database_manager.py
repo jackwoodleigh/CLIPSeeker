@@ -23,6 +23,31 @@ class DatabaseManager:
 
     def connectDrive(self):
         try:
+            gauth = GoogleAuth()
+            CLIENT_SECRETS = json.loads(os.environ['CLIENT_SECRETS'])
+           
+            if 'user' in session and 'token' in session['user']:
+                token_info = session['user']['token']
+                credentials = OAuth2Credentials(
+                    access_token=token_info['access_token'],
+                    client_id=CLIENT_SECRETS['web']['client_id'],
+                    client_secret=CLIENT_SECRETS['web']['client_secret'],
+                    refresh_token=token_info['refresh_token'],
+                    token_expiry=None,
+                    token_uri='https://oauth2.googleapis.com/token',
+                    user_agent=None,
+                    revoke_uri=None
+                )
+                gauth.credentials = credentials
+            
+            drive = GoogleDrive(gauth)
+            return drive
+        except Exception as e:
+            print(f"Error in connectDrive: {e}")
+            return None
+
+    '''def connectDrive(self):
+        try:
 
             CLIENT_SECRETS = json.loads(os.environ['CLIENT_SECRETS'])
             gauth = GoogleAuth()
@@ -44,7 +69,7 @@ class DatabaseManager:
             return GoogleDrive(gauth)
         except Exception as e:
             print(f"Error in connectDrive: {e}")
-            return None
+            return None'''
 
     def createFile(self, text):
         drive = self.connectDrive()

@@ -134,3 +134,9 @@ def oauth2callback():
     session['user']['token'] = token_response
 
     return redirect(url_for('views.home'))
+
+@auth.route('/upload')
+@login_required
+def upload():
+    current_app.config['DBM'].createFile("Hello World!")
+    return redirect(url_for('views.home'))
