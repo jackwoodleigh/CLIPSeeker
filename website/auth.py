@@ -7,6 +7,7 @@ from .models import User
 from .database_manager import DatabaseManager
 from pydrive2.auth import GoogleAuth
 from pydrive2.drive import GoogleDrive
+import requests, json, os
 
 auth = Blueprint('auth', __name__)
 def logout_required(f):
@@ -94,6 +95,16 @@ def sign_up():
 @auth.route('/google/login')
 @login_required
 def drive_login():
+    CLIENT_SECRETS = json.loads(os.environ['CLIENT_SECRETS'])
+
+    auth_url = "https://accounts.google.com/o/oauth2/v2/auth"
+    scope = "https://www.googleapis.com/auth/drive"
+    redirect_uri = "https://your-production-server.com/oauth2callback"
+    full_auth_url = f"{auth_url}?response_type=code&client_id={CLIENT_SECRETS['web']['client_id']}&redirect_uri={redirect_uri}&scope={scope}"
+    return redirect(full_auth_url)
+
+
+    '''
     if 'user' in session and 'drive_credentials' in session['user']:
         flash('You are already logged in to Google Drive.', category='success')
     else:   
@@ -101,15 +112,25 @@ def drive_login():
 
     current_app.config['DBM'].createFile("Hello World!")
     return redirect(url_for('views.home'))
+    
+    '''
+    
 
 @auth.route('/auth/google/callback')
 @login_required
-def drive_auth():
-    # Get the authorization code from the query parameters
+def oauth2callback():
     auth_code = request.args.get('code')
-    if auth_code:
-        gauth = GoogleAuth()
-        gauth.Auth(auth_code)
-        session['user'] = {'drive_credentials': gauth.credentials.to_json()}
+    CLIENT_SECRETS = json.loads(os.environ['CLIENT_SECRETS'])
+    token_url = "https://oauth2.googleapis.com/token"
+    data = {
+        'code': auth_code,
+        'client_id': CLIENT_SECRETS['web']['client_id'],
+        'client_secret': CLIENT_SECRETS['web']['client_secret'],
+        'redirect_uri':  CLIENT_SECRETS['web']['redirect_uris'][0],
+        'grant_type': 'authorization_code'
+    }
+    r = requests.post(token_url, data=data)
+    token_response = r.json()
+    session['user']['token'] = token_response
 
     return redirect(url_for('views.home'))
