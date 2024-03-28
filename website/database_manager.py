@@ -1,12 +1,15 @@
-from pydrive2.auth import GoogleAuth
-from pydrive2.drive import GoogleDrive
-from oauth2client.client import OAuth2Credentials
-from oauth2client.client import GoogleCredentials
 from flask import flash, session, g
 from simple_salesforce import Salesforce, SalesforceLogin
 import pandas as pd
 from functools import wraps
 import json, os
+from google.oauth2.credentials import Credentials
+from google.auth.transport.requests import Request
+from googleapiclient.discovery import build
+from googleapiclient.http import MediaIoBaseUpload
+from io import StringIO
+
+
 
 def drive_login_required(f):
     @wraps(f)
@@ -24,30 +27,43 @@ class DatabaseManager:
 
     def connectDrive(self):
         try:
-            gauth = GoogleAuth()
+     
             CLIENT_SECRETS = json.loads(os.environ['CLIENT_SECRETS'])
            
             if 'user' in session and 'token' in session['user']:
                 token_info = session['user']['token']
-                credentials = GoogleCredentials(
-                    access_token=token_info['access_token'],
-                    client_id=CLIENT_SECRETS['web']['client_id'],
-                    client_secret=CLIENT_SECRETS['web']['client_secret'],
+                credentials = Credentials(token=token_info['access_token'],
                     refresh_token=token_info['refresh_token'],
-                    token_expiry=None,
                     token_uri='https://oauth2.googleapis.com/token',
-                    user_agent=None,
-                    revoke_uri=None
-                )
-                gauth.credentials = credentials
+                    client_id=CLIENT_SECRETS['web']['client_id'],
+                    client_secret=CLIENT_SECRETS['web']['client_secret'])
+            else:
+                    print("Credentials not in session.")
+                    return None
             
-            drive = GoogleDrive(gauth)
-            return drive
+            if not credentials.valid:
+                if credentials.expired and credentials.refresh_token:
+                    credentials.refresh(Request())
+                else:
+                    print("Credentials are not valid and can't be refreshed.")
+                    return None
+
+            drive_service = build('drive', 'v3', credentials=credentials)
+            return drive_service
         except Exception as e:
             print(f"Error in connectDrive: {e}")
             return None
 
-
+    def createFile(self, text):
+        drive_service = self.connectDrive()
+        if drive_service:
+            file_metadata = {'name': 'My Document', 'mimeType': 'application/vnd.google-apps.document'}
+            media = MediaIoBaseUpload(StringIO(text), mimetype='text/plain')
+            file = drive_service.files().create(body=file_metadata, media_body=media, fields='id').execute()
+            print(f"File ID: {file.get('id')}")
+        else:
+            print("Failed to connect to Google Drive or create a file.")
+'''
     def createFile(self, text):
         drive = self.connectDrive()
         if drive:
@@ -55,6 +71,6 @@ class DatabaseManager:
             file1.SetContentString(text)
             file1.Upload({"convert": True})
         else:
-            print("Failed to connect to Google Drive or create a file.")
+            print("Failed to connect to Google Drive or create a file.")'''
         
 
