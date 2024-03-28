@@ -5,8 +5,6 @@ from functools import wraps
 import pandas as pd
 from .models import User
 from .database_manager import DatabaseManager
-from pydrive2.auth import GoogleAuth
-from pydrive2.drive import GoogleDrive
 import requests, json, os
 
 auth = Blueprint('auth', __name__)
@@ -69,7 +67,6 @@ def sign_up():
         lastname = request.form.get('lastname')
         password1 = request.form.get('password1')
         password2 = request.form.get('password2')
-
         user = current_app.config['DBM'].SF.query_all("SELECT Email__c FROM CLIPAccount__c WHERE Email__c = '{}'".format(email))
         
         if user['records']:
@@ -120,9 +117,7 @@ def callback():
     }
     r = requests.post(token_url, data=data)
     token_response = r.json()
-    print("Before setting token:", session.get('token'))
     session['token'] = token_response
-    print("After setting token:", session.get('token'))
     return redirect(url_for('views.home'))
 
 @auth.route('/create-file')
