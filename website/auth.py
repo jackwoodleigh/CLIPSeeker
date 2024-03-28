@@ -99,7 +99,7 @@ def drive_login():
 
     auth_url = "https://accounts.google.com/o/oauth2/v2/auth"
     scope = "https://www.googleapis.com/auth/drive"
-    redirect_uri = "https://your-production-server.com/oauth2callback"
+    redirect_uri = "https://your-production-server.com/auth/google/callback"
     full_auth_url = f"{auth_url}?response_type=code&client_id={CLIENT_SECRETS['web']['client_id']}&redirect_uri={redirect_uri}&scope={scope}"
     return redirect(full_auth_url)
 
