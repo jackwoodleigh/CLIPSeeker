@@ -26,9 +26,11 @@ class DatabaseManager:
 
             CLIENT_SECRETS = json.loads(os.environ['CLIENT_SECRETS'])
             gauth = GoogleAuth()
-            gauth.LoadClientConfigSettings(CLIENT_SECRETS)
-            print(gauth.client_config['client_id'])
-            
+
+            gauth.client_config['client_id'] = CLIENT_SECRETS['installed']['client_id']
+            gauth.client_config['client_secret'] = CLIENT_SECRETS['installed']['client_secret']
+            gauth.client_config['redirect_uri'] = CLIENT_SECRETS['installed']['redirect_uris'][0]
+
             if 'user' in session and 'drive_credentials' in session['user']:
                 gauth.credentials = OAuth2Credentials.from_json(session['user']['drive_credentials'])
 
