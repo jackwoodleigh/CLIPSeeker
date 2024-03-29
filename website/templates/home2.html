@@ -1,0 +1,22 @@
+{% extends "index.html" %}
+
+{% block styles %}
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/home.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="home">
+    <div class="home-text">
+        <h1>CLIPSeeker</h1>
+        <h4>Jack Woodleigh <a href="https://github.com/jackwoodleigh/CLIPsite" target="_blank"><i class="ri-github-fill"></i></a></h4>
+
+        <p>Secure integration of OpenAI's CLIP  with Google Photo's to enable user to text-to-image their photo library.</p>
+        <a href="#">Learn More</a>
+        <a href="#" class="ctaa"><i class="ri-play-fill"></i> Watch Video</a>
+    </div>
+    <div class="home-img">
+        <img src="{{ url_for('static', filename='assets/cat.jpg') }}" alt="Cat">
+    </div>
+</section>
+
+{% endblock %}

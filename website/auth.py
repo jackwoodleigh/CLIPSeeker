@@ -56,7 +56,7 @@ def login():
 @login_required
 def logout():
     session.pop('user', None)
-    return redirect(url_for('auth.login'))
+    return redirect(url_for('auth.login2'))
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 @logout_required
@@ -131,3 +131,60 @@ def create_file():
 def photos_test():
     print(current_app.config['DBM'].retrievePhotos())
     return redirect(url_for('views.home'))
+
+
+
+@auth.route('/login2', methods=['GET', 'POST'])
+@logout_required
+def login2():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password1')
+
+        user = current_app.config['DBM'].SF.query_all("SELECT Id, Email__c, FirstName__c, LastName__c, Password__c FROM CLIPAccount__c WHERE Email__c = '{}'".format(email))
+        
+    
+        if user['records']:
+            user = pd.DataFrame(user['records']).loc[0]
+            if check_password_hash(user['Password__c'], password):
+                session['user'] = {'id': user['Id'], 'email': user['Email__c'], 'first_name': user['FirstName__c'], 'last_name': user['LastName__c'], 'password': user['Password__c']}
+                return redirect(url_for('views.home2'))
+            else:
+                pass
+        else:
+            pass
+        return redirect(url_for('views.home2'))
+
+    return render_template("login2.html", session=session)
+
+
+
+
+@auth.route('/sign-up2', methods=['GET', 'POST']) # home page aka website {domain}/ 
+@logout_required
+def sign_up2():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        firstname = request.form.get('firstname')
+        lastname = request.form.get('lastname')
+        password1 = request.form.get('password1')
+        password2 = request.form.get('password2')
+        user = current_app.config['DBM'].SF.query_all("SELECT Email__c FROM CLIPAccount__c WHERE Email__c = '{}'".format(email))
+        
+        if user['records']:
+            pass #flash('Email already Exists', category='error')
+        elif len(email) < 4:
+            pass #flash('Email must be at least 4 characters', category='error') #cat can be anything
+        elif len(firstname) < 2:
+            pass #flash('Username must be at least 2 characters', category='error') 
+        elif len(lastname) < 2:
+            pass #flash('Username must be at least 2 characters', category='error') 
+        elif password1 != password2:
+            pass #flash('Passwords don\'t match', category='error') 
+        elif len(password1) < 4:
+            pass #flash('Password must be at least 4 characters', category='error') 
+        else:
+            current_app.config['DBM'].SF.CLIPAccount__c.create({'Email__c': email, 'FirstName__c': firstname, 'LastName__c': lastname, 'Password__c': generate_password_hash(password1)})
+            return redirect(url_for('auth.login2'))
+
+    return render_template("sign_up2.html") 

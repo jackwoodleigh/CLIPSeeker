@@ -5,8 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>CLIPsite</title>
 
-    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/style.css') }}">
-    
+    <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/index.css') }}">
+    {% block styles %}{% endblock %}
+
     <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@4.2.0/fonts/remixicon.css" rel="stylesheet"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -18,43 +19,28 @@
     <header>
         <a href="#" class="logo">CLIPSeeker</a>
         <ul class="navlist">
-            <li><a href="#">Home</a></li>
+            <li><a href="/home2">Home</a></li>
             <li><a href="#">About</a></li>
             <li><a href="#">Learn More</a></li>
             <li><a href="#">Contact</a></li>
-            <li><a href="#">Login</a></li>
+            {% if "user" in session %}
+                <li><a href="/logout">Logout</a></li>
+            {% else %}
+                
+                <li><a href="/login2">Login</a></li>
+                <li><a href="/sign-up2">Sign Up</a></li>
+            {% endif %}
         </ul>
         <div class="bx bx-menu" id="menu-icon"></div>
 
         
     </header>
 
-    <section class="hero">
-        <div class="hero-text">
-            <h1>CLIPSeeker</h1>
-            <h4>Jack Woodleigh <a href="https://github.com/jackwoodleigh/CLIPsite" target="_blank"><i class="ri-github-fill"></i></a></h4>
-    
-            <p>Secure integration of OpenAI's CLIP  with Google Photo's to enable user to text-to-image their photo library.</p>
-            <a href="#">Learn More</a>
-            <a href="#" class="ctaa"><i class="ri-play-fill"></i> Watch Video</a>
-        </div>
-        <div class="hero-img">
-            <img src="{{ url_for('static', filename='assets/cat.jpg') }}" alt="Cat">
-        </div>
-        <!-- FILEPATH: /c:/Users/woodleighj/Documents/CLIPsite/website/templates/index.html -->
-        <!-- BEGIN: ed8c6549bwf9 -->
-        <!--
-                <div class="icons">
-                    <a href="#"><i class="ri-github-fill"></i></a>
-                </div>
-        -->
-        <!-- END: ed8c6549bwf9 -->
-    </section>
+    {% block content %}
+    {% endblock %}
 
     <script src="https://unpkg.com/scrollreveal"></script>
-    
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>
-    
 
 </body>
 </html>

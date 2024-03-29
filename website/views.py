@@ -22,10 +22,10 @@ def library(): # whatevers in here will run first for ^
 def profile(): # whatevers in here will run first for ^
     return render_template("profile.html", session=session)
 
-@views.route('/test') # home page aka website {domain}/ 
-@login_required
-def test():
-    return render_template("index.html", session=session)
+@views.route('/home2') # home page aka website {domain}/ 
+def home2():
+    return render_template("home2.html", session=session)
+
 
 
 '''
