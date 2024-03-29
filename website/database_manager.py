@@ -22,7 +22,7 @@ def drive_login_required(f):
 class DatabaseManager:
 
     def __init__(self, app):
-        session_id, instance = SalesforceLogin(username=app.config['DB_USERNAME'], password=app.config['DB_PASSWORD'], security_token=app.config['DB_SECURITY_TOKEN'])
+        session_id, instance = SalesforceLogin(username=app.config['SF_SECRETS']['username'], password=app.config['SF_SECRETS']['password'], security_token=app.config['SF_SECRETS']['security_token'])
         self.SF = Salesforce(instance=instance, session_id=session_id)
 
     def connectDrive(self):

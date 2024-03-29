@@ -7,14 +7,20 @@ import pandas as pd
 import json, os
 
 def create_app():
-    app = Flask(__name__)
-    DEVELOPMENT = False
-    app.config.from_object('config.Config')
+    app = Flask(__name__, static_folder='static')
+    DEVELOPMENT = True
+    app.config['SECRET_KEY'] = "sdfsdgasdg32y35dfujesf42geasca8fg2vnuwfrg"
+    app.config['DEBUG'] = False
+    app.config['TESTING'] = False
+
+
 
     if(DEVELOPMENT):
         app.config['CLIENT_SECRETS'] = json.load(open('client_secrets.json'))
+        app.config['SF_SECRETS'] = json.load(open('salesforce_secrets.json'))
     else:
         app.config['CLIENT_SECRETS'] = json.loads(os.environ['CLIENT_SECRETS'])
+        app.config['SF_SECRETS'] = json.loads(os.environ['SF_SECRETS'])
 
 
     

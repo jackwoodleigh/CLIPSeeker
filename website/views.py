@@ -22,6 +22,12 @@ def library(): # whatevers in here will run first for ^
 def profile(): # whatevers in here will run first for ^
     return render_template("profile.html", session=session)
 
+@views.route('/test') # home page aka website {domain}/ 
+@login_required
+def test():
+    return render_template("index.html", session=session)
+
+
 '''
 </a>
         <a href="https://collegesailing.org/news_events/images/uploads/icsa_news/all-aca17-18.jpg" data-toggle="lightbox" data-gallery="gall">
