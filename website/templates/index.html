@@ -3,7 +3,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CLIPsite</title>
+    <title>CLIPbrarian</title>
 
     <link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/index.css') }}">
     {% block styles %}{% endblock %}
@@ -17,7 +17,7 @@
 </head>
 <body>
     <header>
-        <a href="#" class="logo">CLIPSeeker</a>
+        <a href="#" class="logo">CLIPbrarian</a>
         <ul class="navlist">
             <li><a href="/home2">Home</a></li>
             <li><a href="#">About</a></li>
@@ -36,8 +36,12 @@
         
     </header>
 
-    {% block content %}
-    {% endblock %}
+    <div class="container mt-2">
+           
+        {% block content %}
+        {% endblock %}
+   
+    </div>
 
     <script src="https://unpkg.com/scrollreveal"></script>
     <script src="{{ url_for('static', filename='js/scripts.js') }}"></script>

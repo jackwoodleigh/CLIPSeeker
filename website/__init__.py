@@ -8,7 +8,7 @@ import json, os
 
 def create_app():
     app = Flask(__name__, static_folder='static')
-    DEVELOPMENT = False
+    DEVELOPMENT = True
     app.config['SECRET_KEY'] = "sdfsdgasdg32y35dfujesf42geasca8fg2vnuwfrg"
     app.config['DEBUG'] = False
     app.config['TESTING'] = False
