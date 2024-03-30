@@ -2,7 +2,7 @@
 .home{
     height: auto;
     width: auto;
-    min-height: 75vh;
+    min-height: 60vh;
     
     display: flex;
     /*grid-template-columns: repeat(2, 1fr);*/
