@@ -94,9 +94,9 @@ class DatabaseManager:
             for item in items:
                 all_photos.append({
                     'id': item['id'],
-                    'baseUrl': item['baseUrl'],  # Use 'baseUrl' to get the image URL
-                    'mimeType': item.get('mimeType', 'image/jpeg'),  # mimeType might not be present
-                    'filename': item.get('filename', 'Unnamed')  # Some items might not have a filename
+                    'baseUrl': item['baseUrl'], 
+                    'mimeType': item.get('mimeType', 'image/jpeg'), 
+                    'filename': item.get('filename', 'Unnamed')  
                 })
 
             return all_photos
