@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %} Home {% endblock %}
+
+{% block content %}
+
+<div class="container text-center">
+    <h1 class="display-6 fw-bold py-5"> Gallery</h1>
+    <div class="gallery" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); grid-gap: 30px;">
+        {% for image in images %}
+            <a href="{{ image['baseUrl'] }}" data-gallery="gall">
+                <img src="{{ image['baseUrl'] }}" alt="{{ image['filename'] }}" class="img-fluid" style="width: 100%; height: 100%;">
+        {% endfor %}
+    </div>
+    
+
+</div>
+{% endblock %}

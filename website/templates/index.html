@@ -19,15 +19,17 @@
     <header>
         <a href="#" class="logo">CLIPbrarian</a>
         <ul class="navlist">
-            <li><a href="/home2">Home</a></li>
-            <li><a href="#">About</a></li>
-            <li><a href="#">Learn More</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="/">Home</a></li>
             {% if "user" in session %}
+                <li><a href="/profile">Profile</a></li>
+                <li><a href="/library">Library</a></li>
                 <li><a href="/logout">Logout</a></li>
+                <li><a href="/google/login">Drive</a></li>
             {% else %}
-                <li><a href="/login2">Login</a></li>
-                <li><a href="/sign-up2">Sign Up</a></li>
+                <li><a href="#">Learn More</a></li>
+                <li><a href="#">Contact</a></li>
+                <li><a href="/login">Login</a></li>
+                <li><a href="/sign-up">Sign Up</a></li>
             {% endif %}
         </ul>
         <div class="bx bx-menu" id="menu-icon"></div>

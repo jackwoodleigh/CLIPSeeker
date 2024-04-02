@@ -1,18 +1,46 @@
-{% extends "base.html" %}
+{% extends "index.html" %}
 
-{% block title %} Home {% endblock %}
+{% block styles %}
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/library.css') }}">
+{% endblock %}
 
 {% block content %}
 
-<div class="container text-center">
-    <h1 class="display-6 fw-bold py-5"> Gallery</h1>
-    <div class="gallery" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); grid-gap: 30px;">
+<section class="library">
+    <h1>Library</h1>
+    <div class="search">
+        <form action="" class="search-bar">
+            <input type="text" placeholder="Search" class="q">
+            <button type="submit" class="b"><i class="ri-search-line"></i></button>
+        </form>
+    </div>
+    <div class="gallery">
         {% for image in images %}
-            <a href="{{ image['baseUrl'] }}" data-gallery="gall">
-                <img src="{{ image['baseUrl'] }}" alt="{{ image['filename'] }}" class="img-fluid" style="width: 100%; height: 100%;">
+            <div class="gallery-item">
+                <a href="{{ image['baseUrl'] }}" data-gallery="gall">
+                    <img src="{{ image['baseUrl'] }}" alt="{{ image['filename'] }}" class="gallery-image">
+                </a>
+            </div>
         {% endfor %}
     </div>
-    
 
-</div>
+
+</section>
+
+
+
 {% endblock %}
+<div class="dream">
+    <img src="{{ url_for('static', filename='assets/photo1.jpg') }}">
+    <img src="{{ url_for('static', filename='assets/photo2.jpg') }}">
+    <img src="{{ url_for('static', filename='assets/photo3.jpg') }}">
+    <img src="{{ url_for('static', filename='assets/photo4.jpg') }}">
+    <img src="{{ url_for('static', filename='assets/photo5.jpg') }}">
+</div>
+<div class="dream">
+    <img src="{{ url_for('static', filename='assets/photo1.jpg') }}">
+    <img src="{{ url_for('static', filename='assets/photo2.jpg') }}">
+    <img src="{{ url_for('static', filename='assets/photo3.jpg') }}">
+    <img src="{{ url_for('static', filename='assets/photo4.jpg') }}">
+    <img src="{{ url_for('static', filename='assets/photo5.jpg') }}">
+</div>

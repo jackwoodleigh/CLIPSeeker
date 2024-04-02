@@ -1,13 +1,22 @@
-{% extends "base.html" %}
+{% extends "index.html" %}
 
-{% block title %} Home {% endblock %}
+{% block styles %}
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/home.css') }}">
+{% endblock %}
 
 {% block content %}
-<h1>
-    This is the home
-</h1>
-<div>
-    <a href="/google/login" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Drive Login</a>
-    <a href="/photos-test" class="btn btn-primary btn-lg active" role="button" aria-pressed="true">Get Photos</a>
-</div>
+<section class="home">
+    <div class="home-text">
+        <h1>CLIPbrarian</h1>
+        <h4>Jack Woodleigh <a href="https://github.com/jackwoodleigh/CLIPsite" target="_blank"><i class="ri-github-fill"></i></a></h4>
+
+        <p>Secure integration of OpenAI's CLIP with Google Photos to enable users to search their <br>photo library using text-to-image queries.</p>
+        <a href="#">Learn More</a>
+        <a href="#" class="ctaa"><i class="ri-play-fill"></i> Watch Video</a>
+    </div>
+    <div class="home-img">
+        <img src="{{ url_for('static', filename='assets/cat.jpg') }}" alt="Cat">
+    </div>
+</section>
+
 {% endblock %}

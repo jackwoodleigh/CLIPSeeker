@@ -1,29 +1,39 @@
-{% extends "base.html" %}
+{% extends "index.html" %}
 
-{% block title %} Login {% endblock %}
+{% block styles %}
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/login.css') }}">
+{% endblock %}
 
 {% block content %}
-<form method = "POST">
-    <h3 align="center">Login</h3>
-    <div class="form-group m-2">
-        <label for="text">Email</Address></label>
-        <input type="email" 
-        class="form-control" 
-        id="email" 
-        name="email" 
-        placeholder="Enter Email">
-    </div>
-    <div class="form-group m-2">
-        <label for="password1">Password</Address></label>
-        <input type="text" 
-        class="form-control" 
-        id="password1" 
-        name="password1" 
-        placeholder="Enter Password">
-    </div>
-    <br />
-    <button type="submit" class="btn btn-outline-primary">Login</button>
+
+<section class="login">
+    <div class="login-panel">
+        <div class="login-text">
+            <h1>Login</h1>
+            <form method="POST" action="{{ url_for('auth.login') }}">
+                <div class="input-group">
+                    <input type="email" id="email" name="email" placeholder="Email" required>
+                    <span class="input-icon"><i class="ri-mail-line"></i></span>
+                </div>
     
-</form>
+                <div class="input-group">
+                    <input type="password" id="password1" name="password1" placeholder="Password" required>
+                    <span class="input-icon"><i class="ri-lock-line"></i></span>
+                </div>
+                <button type="submit" class="login-button">Login</button>
+            </form>
+            <div class="signup-link"> Don’t have an account? <a href="/sign-up">Register</a></div>
+
+
+        </div>
+
+
+    </div>
+    
+       
+
+</section>
+
+
 
 {% endblock %}

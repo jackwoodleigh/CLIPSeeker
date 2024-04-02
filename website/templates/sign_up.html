@@ -1,57 +1,54 @@
-{% extends "base.html" %}
+{% extends "index.html" %}
 
-{% block title %} Sign Up {% endblock %}
+{% block styles %}
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/login.css') }}">
+{% endblock %}
 
 {% block content %}
 
+<section class="login">
+    <div class="login-panel">
+        <div class="login-text">
+            <h1>Sign Up</h1>
 
- 
-<form method = "POST">
-    <h3 align="center">Sign Up</h3>
-    <div class="form-group m-2">
-        <label for="email">Email Address</Address></label>
-        <input type="email" 
-        class="form-control" 
-        id="email" 
-        name="email" 
-        placeholder="Enter Email">
-    </div>
-    <div class="form-group m-2">
-        <label for="firstname">First Name</Address></label>
-        <input type="text" 
-        class="form-control" 
-        id="firstname" 
-        name="firstname" 
-        placeholder="Enter First Name">
+            <div class="input-group">
+                <input type="email" id="email" name="email" placeholder="Email" required>
+                <span class="input-icon"><i class="ri-mail-line"></i></span>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="firstname" name="firstname" placeholder="Firstname" required>
+                <span class="input-icon"><i class="ri-user-line"></i></span>
+            </div>
+
+            <div class="input-group">
+                <input type="text" id="lastname" name="lastname" placeholder="Lastname" required>
+                <span class="input-icon"><i class="ri-group-line"></i></span>
+            </div>
+
+            <div class="input-group">
+                <input type="password" id="password1" name="password1" placeholder="Password" required>
+                <span class="input-icon"><i class="ri-lock-line"></i></span>
+            </div>
+
+            <div class="input-group">
+                <input type="password2" id="password2" name="password2" placeholder="Password (Confirm)" required>
+                <span class="input-icon"><i class="ri-lock-line"></i></span>
+            </div>
+
+            <button type="submit" class="login-button">Sign Up</button>
+
+            <div class="signup-link"> Have an Account? <a href="/login2">Login</a></div>
+
+        </div>
+
 
     </div>
-    <div class="form-group m-2">
-        <label for="lastname">Last Name</Address></label>
-        <input type="text" 
-        class="form-control" 
-        id="lastname" 
-        name="lastname" 
-        placeholder="Enter Last Name">
+    
+       
 
-    </div>
-    <div class="form-group m-2">
-        <label for="password1">Password</Address></label>
-        <input type="text" 
-        class="form-control" 
-        id="password1" 
-        name="password1" 
-        placeholder="Enter Password">
-    </div>
-    <div class="form-group m-2">
-        <label for="password2">Password (Confirm)</Address></label>
-        <input type="text" 
-        class="form-control" 
-        id="password2" 
-        name="password2" 
-        placeholder="Confirm Password">
-    </div>
-    <br />
-    <button type="submit" class="btn btn-outline-primary">Submit</button>
-</form>
+</section>
+
+
 
 {% endblock %}

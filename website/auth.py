@@ -28,7 +28,7 @@ def login_required(f):
 
 
 
-@auth.route('/login', methods=['GET', 'POST'])
+'''@auth.route('/login', methods=['GET', 'POST'])
 @logout_required
 def login():
     if request.method == 'POST':
@@ -51,12 +51,6 @@ def login():
             flash('Email does not exist', category='error')
 
     return render_template("login.html", text="test", bool=False)
-
-@auth.route('/logout')
-@login_required
-def logout():
-    session.pop('user', None)
-    return redirect(url_for('auth.login2'))
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 @logout_required
@@ -87,7 +81,13 @@ def sign_up():
             flash('Account sucessfully created!', category='success')
             return redirect(url_for('auth.login'))
 
-    return render_template("sign_up.html") 
+    return render_template("sign_up.html") '''
+
+@auth.route('/logout')
+@login_required
+def logout():
+    session.pop('user', None)
+    return redirect(url_for('auth.login'))
 
 @auth.route('/google/login')
 @login_required
@@ -134,9 +134,9 @@ def photos_test():
 
 
 
-@auth.route('/login2', methods=['GET', 'POST'])
+@auth.route('/login', methods=['GET', 'POST'])
 @logout_required
-def login2():
+def login():
     if request.method == 'POST':
         email = request.form.get('email')
         password = request.form.get('password1')
@@ -148,21 +148,19 @@ def login2():
             user = pd.DataFrame(user['records']).loc[0]
             if check_password_hash(user['Password__c'], password):
                 session['user'] = {'id': user['Id'], 'email': user['Email__c'], 'first_name': user['FirstName__c'], 'last_name': user['LastName__c'], 'password': user['Password__c']}
-                return redirect(url_for('views.home2'))
+                return redirect(url_for('views.home'))
             else:
                 pass
         else:
             pass
-        return redirect(url_for('views.home2'))
+        return redirect(url_for('views.home'))
 
-    return render_template("login2.html", session=session)
-
-
+    return render_template("login.html", session=session)
 
 
-@auth.route('/sign-up2', methods=['GET', 'POST']) # home page aka website {domain}/ 
+@auth.route('/sign-up', methods=['GET', 'POST']) # home page aka website {domain}/ 
 @logout_required
-def sign_up2():
+def sign_up():
     if request.method == 'POST':
         email = request.form.get('email')
         firstname = request.form.get('firstname')
@@ -185,6 +183,6 @@ def sign_up2():
             pass #flash('Password must be at least 4 characters', category='error') 
         else:
             current_app.config['DBM'].SF.CLIPAccount__c.create({'Email__c': email, 'FirstName__c': firstname, 'LastName__c': lastname, 'Password__c': generate_password_hash(password1)})
-            return redirect(url_for('auth.login2'))
+            return redirect(url_for('auth.login'))
 
-    return render_template("sign_up2.html") 
+    return render_template("sign_up.html") 
