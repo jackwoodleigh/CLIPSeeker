@@ -9,9 +9,9 @@
 <section class="library">
     <h1>Library</h1>
     <div class="search">
-        <form action="" class="search-bar">
-            <input type="text" placeholder="Search" class="q">
-            <button type="submit" class="b"><i class="ri-search-line"></i></button>
+        <form action="{{ url_for('views.library') }}"  method="POST" class="search-bar">
+            <input type="text" id="search" name="search" placeholder="Search">
+            <button type="submit"><i class="ri-search-line"></i></button>
         </form>
     </div>
     <div class="gallery">

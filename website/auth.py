@@ -87,6 +87,9 @@ def sign_up():
 @login_required
 def logout():
     session.pop('user', None)
+    session.pop('token', None)
+    session.pop('images', None)
+    session.pop('drive_credentials', None)
     return redirect(url_for('auth.login'))
 
 @auth.route('/google/login')

@@ -1,4 +1,4 @@
-from flask import Blueprint, render_template, session, current_app
+from flask import Blueprint, render_template, session, current_app, request, redirect, url_for
 from flask_login import current_user
 from .auth import login_required
 
@@ -14,8 +14,15 @@ def home(): # whatevers in here will run first for ^
 def profile(): # whatevers in here will run first for ^
     return render_template("profile.html", session=session)
 
-@views.route('/library') # home page aka website {domain}/ 
+@views.route('/library', methods=['GET', 'POST'])
 def library():
-    images = current_app.config['DBM'].retrievePhotos()
+    if request.method == 'POST':
+        search = request.form['search']
+        print('Search term:', search)
+    
+    if 'images' not in session or session['images'] == []:
+        session["images"] = current_app.config['DBM'].retrievePhotos()
+    images = session["images"]
+    
     return render_template("library.html", session=session,  images=images)
 
