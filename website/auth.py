@@ -96,7 +96,7 @@ def logout():
 @login_required
 def drive_login():
     #CLIENT_SECRETS = json.loads(os.environ['CLIENT_SECRETS'])
-
+    session['last_page'] = request.referrer
     auth_url = "https://accounts.google.com/o/oauth2/v2/auth"
     scope = "https://www.googleapis.com/auth/photoslibrary"
     redirect_uri = "https://clipsite-amjzx.ondigitalocean.app/auth/google/callback"
@@ -121,7 +121,7 @@ def callback():
     r = requests.post(token_url, data=data)
     token_response = r.json()
     session['token'] = token_response
-    return redirect(url_for('views.home'))
+    return redirect(session['last_page'])
 
 @auth.route('/create-file')
 @login_required
@@ -133,7 +133,7 @@ def create_file():
 @login_required
 def photos_test():
     print(current_app.config['DBM'].retrievePhotos())
-    return redirect(url_for('views.home'))
+    return redirect(url_for('views.drive'))
 
 
 

@@ -3,6 +3,7 @@ from flask_login import LoginManager
 from .views import views
 from .auth import auth
 from .database_manager import DatabaseManager
+from .media_manager import MediaManager
 import pandas as pd
 import json, os
 
@@ -23,6 +24,8 @@ def create_app():
 
     
     app.config['DBM'] = DatabaseManager(app)
+    app.config['MM'] = MediaManager(app)
+
   
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')

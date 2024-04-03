@@ -1,0 +1,22 @@
+{% extends "index.html" %}
+
+{% block styles %}
+<link rel= "stylesheet" type= "text/css" href= "{{ url_for('static',filename='css/drive.css') }}">
+{% endblock %}
+
+{% block content %}
+
+<section class="drive">
+    <h1>Drive Management</h1>
+    <div class="drive-buttons">
+        <a href="/google/login" class="connect">Connect Drive</a>
+        <a href="" class="refresh">Refresh Drive</a>
+    </div>    
+    
+       
+
+</section>
+
+
+
+{% endblock %}

@@ -10,15 +10,15 @@
     <h1>Library</h1>
     <div class="search">
         <form action="{{ url_for('views.library') }}"  method="POST" class="search-bar">
-            <input type="text" id="search" name="search" placeholder="Search">
+            <input type="text" id="search" name="search" placeholder="Search" autocomplete="off">
             <button type="submit"><i class="ri-search-line"></i></button>
         </form>
     </div>
     <div class="gallery">
         {% for image in images %}
             <div class="gallery-item">
-                <a href="{{ image['baseUrl'] }}" data-gallery="gall">
-                    <img src="{{ image['baseUrl'] }}" alt="{{ image['filename'] }}" class="gallery-image">
+                <a href="{{ image }}" data-gallery="gall">
+                    <img src="{{ image }}" class="gallery-image">
                 </a>
             </div>
         {% endfor %}

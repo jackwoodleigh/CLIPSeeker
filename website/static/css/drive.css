@@ -1,0 +1,60 @@
+.drive{
+    height: auto;
+    width: auto;
+    min-height: 60vh;
+    
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 5rem;
+    padding: 0 20%;
+    
+   
+}
+.drive h1{
+    font-size: 30px;
+    font-weight: 550;
+    color: white;
+    margin-top: -400px;
+    position: absolute;
+    margin-bottom: 40px;
+    text-align: left; 
+    
+}
+
+.drive-buttons{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+    
+}
+.drive-buttons a{
+    color: white;
+    background: #5E398E;
+    border: 1px solid transparent;
+    padding: 12px 30px;
+    line-height: 1.4;
+    font-weight: 500;
+    border-radius: 30px;
+    text-transform: uppercase;
+    transition: all .55s ease;
+    display: inline-flex; 
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 10px;
+    
+    
+}
+.drive-buttons a:hover{
+    background: transparent;
+    border: 1px solid white;
+    transform: translateX(5px);
+}
+.drive-buttons a.ctaa{
+    background: transparent;
+    border: 1px solid white;
+    
+}

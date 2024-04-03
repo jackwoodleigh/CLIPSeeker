@@ -1,96 +1,75 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-'''from PIL import Image
+from PIL import Image
 import requests
 from transformers import CLIPProcessor, CLIPModel
 from IPython.display import display
+import torch
+import numpy as np
+from flask import session
 
-model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
-processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+# Assuming text_features and image_feature are 2D numpy arrays
 
-# %% Load and visualise the images
-image_urls = [
-    'http://images.cocodataset.org/val2014/COCO_val2014_000000159977.jpg', 
-    'http://images.cocodataset.org/val2014/COCO_val2014_000000311295.jpg',
-    'http://images.cocodataset.org/val2014/COCO_val2014_000000457834.jpg', 
-    'http://images.cocodataset.org/val2014/COCO_val2014_000000555472.jpg',
-    'http://images.cocodataset.org/val2014/COCO_val2014_000000174070.jpg',
-    'http://images.cocodataset.org/val2014/COCO_val2014_000000460929.jpg'
-    ]
-images = []
-for url in image_urls:
-    images.append(Image.open(requests.get(url, stream=True).raw))
 
-def image_grid(imgs, cols):
-    rows = (len(imgs) + cols - 1) // cols
-    w, h = imgs[0].size
-    grid = Image.new('RGB', size=(cols*w, rows*h))
+class MediaManager:
     
-    for i, img in enumerate(imgs):
-        grid.paste(img, box=(i%cols*w, i//cols*h))
-    return grid
+    def __init__(self, app):
+        self.app = app
+        self.processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
+        self.model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
+    
+    def findImages(self, search, image_urls, count):
+        features = self.computeImageFeatures(image_urls)
+        similarity = self.imageSimilarity(search, features)
+        sorted_pairs = sorted(zip(image_urls, similarity), key=lambda x: x[1], reverse=True)
+        sorted_image_urls = [url for url, score in sorted_pairs][:count]
+        top_5_pairs = sorted_pairs[:5]
+        for pair in top_5_pairs:
+            print(f"Similarity: {pair[1]}")
+        
+        return sorted_image_urls
 
-grid = image_grid(images, cols=3)
-display(grid)
 
-# %% Zero-shot classification
-classes = ['giraffe', 'zebra', 'elephant', 'teddybear', 'bottle', 'car']
-inputs = processor(text=classes, images=images, return_tensors="pt", padding=True)
+    def computeImageFeatures(self, image_urls):
+        images = []
+        for url in image_urls:
+            images.append(Image.open(requests.get(url, stream=True).raw))
+        inputs = self.processor(images=images, return_tensors="pt")
+        outputs = self.model.get_image_features(**inputs).tolist()
+        #print(outputs)
+        #session['image_features'] = outputs
+        return outputs
+    
 
-outputs = model(**inputs)
-logits_per_image = outputs.logits_per_image  # this is the image-text similarity score
-probs = logits_per_image.softmax(dim=1)  # we can take the softmax to get the label probabilities
+    def imageSimilarity(self, query, stored_image_features):
 
-# %% Display classification results
+        stored_image_features = torch.tensor(stored_image_features)
+        text_inputs = self.processor(text=[query], return_tensors="pt", padding=True)
+        text_features = self.model.get_text_features(**text_inputs)
+        similarities = [self.cosine_similarity(text_features, image_feature).tolist() for image_feature in stored_image_features]
 
-import matplotlib.pyplot as plt
 
-fig = plt.figure(figsize=(8, 20))
+        return similarities
 
-for idx in range(len(images)):
 
-    # show original image
-    fig.add_subplot(len(images), 2, 2*(idx+1)-1 )
-    plt.imshow(images[idx])
-    plt.xticks([])
-    plt.yticks([])
+    def cosine_similarity(self, text_features, image_features):
 
-    # show probabilities
-    fig.add_subplot(len(images), 2, 2*(idx+1))
-    plt.barh(range(len(probs[0].detach().numpy())),probs[idx].detach().numpy(), tick_label=classes)
-    plt.xlim(0,1.0)
+        if text_features.ndim == 1:
+            text_features = text_features.unsqueeze(0)
 
-    plt.subplots_adjust(left=0.1,
-                        bottom=0.1,
-                        right=0.9,
-                        top=0.9,
-                        wspace=0.2,
-                        hspace=0.8)
+        return torch.nn.functional.cosine_similarity(text_features, image_features, dim=1)
 
-plt.show()'''
+
+'''
+ def findImages(self, search, image_urls):
+        images = []
+        for url in image_urls:
+            images.append(Image.open(requests.get(url, stream=True).raw))
+        
+        inputs = self.processor(text=search, images=images, return_tensors="pt", padding=True)
+
+        outputs = self.model(**inputs)
+        logits_per_image = outputs.logits_per_image  # this is the image-text similarity score
+        probs = logits_per_image.softmax(dim=1)  #  softmax to get the label probabilities
+        return outputs
+
+
+'''
