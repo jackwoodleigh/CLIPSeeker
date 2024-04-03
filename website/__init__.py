@@ -30,7 +30,6 @@ def create_app():
     app.register_blueprint(views, url_prefix='/')
     app.register_blueprint(auth, url_prefix='/')
     
-    #from .models import User, Note
 
     login_manager = LoginManager()
     login_manager.login_view = 'auth.login'
