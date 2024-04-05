@@ -1,7 +1,6 @@
 
 .library {
     display: flex;
- 
     flex-direction: column;
     justify-content: center;
     align-items: center;
@@ -93,4 +92,19 @@ input:-webkit-autofill:active{
     display: block;
     border-radius: 5px;
     border: 2px solid white;
+}
+
+.msg{
+    width: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 10%;
+
+    
+}
+.msg h4{
+    color:white;
+    font-size: 20px;
+    font-weight: 300;
 }

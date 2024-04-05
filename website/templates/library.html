@@ -14,15 +14,29 @@
             <button type="submit"><i class="ri-search-line"></i></button>
         </form>
     </div>
-    <div class="gallery">
-        {% for image in images %}
-            <div class="gallery-item">
-                <a href="{{ image }}" data-gallery="gall">
-                    <img src="{{ image }}" class="gallery-image">
-                </a>
-            </div>
-        {% endfor %}
-    </div>
+    {% if 'token' not in session %}
+        <div class="msg">
+            <h4>Login Here to Google Drive</h4>
+        </div>
+        
+    {% elif images == []  %}
+        <div class="msg">
+            <h4>No images found</h4>
+        </div>  
+       
+    {% else %}
+        <div class="gallery">
+            {% for image in images %}
+                <div class="gallery-item">
+                    <a href="{{ image }}" data-gallery="gall">
+                        <img src="{{ image }}" class="gallery-image">
+                    </a>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+        
+    
 
 
 </section>

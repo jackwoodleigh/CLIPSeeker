@@ -1,14 +1,13 @@
 .drive{
     height: auto;
     width: auto;
-    min-height: 60vh;
-    
+    min-height: 70vh;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    justify-content: center;
-    gap: 5rem;
+    justify-content: flex-start;
     padding: 0 20%;
+    
     
    
 }
@@ -16,36 +15,45 @@
     font-size: 30px;
     font-weight: 550;
     color: white;
-    margin-top: -400px;
-    position: absolute;
     margin-bottom: 40px;
-    text-align: left; 
-    
+    text-align: flex-start; 
+    display: flex;
+    flex-direction: row;
+}
+.drive-management{
+    display: flex;
+    flex-direction: row;
+    align-items: center; 
+    justify-content: flex-start; 
+    width: 100%;
+    margin-left: 20px;
 }
 
-.drive-buttons{
+.drive-label,
+.drive-buttons {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
     flex-direction: column;
+    justify-content: center; 
+    color: white;
+}
+.drive-buttons{
+    width: auto;
     
 }
-.drive-buttons a{
+.drive-buttons a, .drive-label h3{
+    padding: 12px 30px;
+    margin-bottom: 20px;
+}
+.drive-buttons a {
     color: white;
     background: #5E398E;
     border: 1px solid transparent;
-    padding: 12px 30px;
     line-height: 1.4;
     font-weight: 500;
     border-radius: 30px;
     text-transform: uppercase;
     transition: all .55s ease;
-    display: inline-flex; 
-    align-items: center;
-    justify-content: center;
-    margin-bottom: 10px;
-    
+    text-align: center; 
     
 }
 .drive-buttons a:hover{
@@ -58,3 +66,10 @@
     border: 1px solid white;
     
 }
+.drive-label h3 {
+    color: white;
+    white-space: nowrap; 
+    font-weight: 500;
+}
+
+

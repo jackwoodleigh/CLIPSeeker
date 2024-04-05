@@ -14,7 +14,7 @@ import time
 def drive_login_required(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
-        if 'user' in session and 'drive_credentials' not in session['user']:
+        if 'token' not in session['user']:
             flash('Please login to google drive.', category='error')
         return f(*args, **kwargs)
     return decorated_function
@@ -85,6 +85,8 @@ class DatabaseManager:
                     }
                 except Exception as e:
                     raise(Exception("Failed to refresh token."))
+            
+            
             return credentials
         else:
             raise(Exception("No token in session."))

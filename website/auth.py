@@ -28,58 +28,7 @@ def login_required(f):
 
 
 
-@auth.route('/logout')
-@login_required
-def logout():
-    session.pop('user', None)
-    session.pop('token', None)
-    session.pop('images', None)
-    session.pop('drive_credentials', None)
-    return redirect(url_for('auth.login'))
-
-@auth.route('/google/login')
-@login_required
-def drive_login():
-    #CLIENT_SECRETS = json.loads(os.environ['CLIENT_SECRETS'])
-    session['last_page'] = request.referrer
-    auth_url = "https://accounts.google.com/o/oauth2/v2/auth"
-    scope = "https://www.googleapis.com/auth/photoslibrary"
-    redirect_uri = "https://clipsite-amjzx.ondigitalocean.app/auth/google/callback"
-    full_auth_url = f"{auth_url}?response_type=code&client_id={current_app.config['CLIENT_SECRETS']['web']['client_id']}&redirect_uri={current_app.config['CLIENT_SECRETS']['web']['redirect_uris'][0]}&scope={scope}"
-    return redirect(full_auth_url)
-
-    
-
-@auth.route('/auth/google/callback')
-@login_required
-def callback():
-    auth_code = request.args.get('code')
-    #CLIENT_SECRETS = json.loads(os.environ['CLIENT_SECRETS'])
-    token_url = "https://oauth2.googleapis.com/token"
-    data = {
-        'code': auth_code,
-        'client_id': current_app.config['CLIENT_SECRETS']['web']['client_id'],
-        'client_secret': current_app.config['CLIENT_SECRETS']['web']['client_secret'],
-        'redirect_uri':  current_app.config['CLIENT_SECRETS']['web']['redirect_uris'][0],
-        'grant_type': 'authorization_code'
-    }
-    r = requests.post(token_url, data=data)
-    token_response = r.json()
-    session['token'] = token_response
-    return redirect(session['last_page'])
-
-@auth.route('/create-file')
-@login_required
-def create_file():
-    current_app.config['DBM'].createFile("Hello World!")
-    return redirect(url_for('views.home'))
-
-@auth.route('/photos-test')
-@login_required
-def photos_test():
-    print(current_app.config['DBM'].retrievePhotos())
-    return redirect(url_for('views.drive'))
-
+#############################################################################################
 
 
 @auth.route('/login', methods=['GET', 'POST'])
@@ -104,6 +53,8 @@ def login():
         return redirect(url_for('views.home'))
 
     return render_template("login.html", session=session)
+
+
 
 
 @auth.route('/sign-up', methods=['GET', 'POST']) # home page aka website {domain}/ 
@@ -134,6 +85,64 @@ def sign_up():
             return redirect(url_for('auth.login'))
 
     return render_template("sign_up.html") 
+
+@auth.route('/logout')
+@login_required
+def logout():
+    session.pop('user', None)
+    session.pop('token', None)
+    session.pop('last_page', None)
+    return redirect(url_for('auth.login'))
+
+#############################################################################################
+
+@auth.route('/google/login')
+@login_required
+def drive_login():
+    auth_url = "https://accounts.google.com/o/oauth2/v2/auth"
+    scope = "https://www.googleapis.com/auth/photoslibrary"
+    redirect_uri = "https://clipsite-amjzx.ondigitalocean.app/auth/google/callback"
+    full_auth_url = f"{auth_url}?response_type=code&client_id={current_app.config['CLIENT_SECRETS']['web']['client_id']}&redirect_uri={current_app.config['CLIENT_SECRETS']['web']['redirect_uris'][0]}&scope={scope}"
+    return redirect(full_auth_url)
+
+@auth.route('/google/logout')
+@login_required
+def drive_logout():
+    session.pop('token', None)
+    return redirect(session['last_page'])
+    
+
+@auth.route('/auth/google/callback')
+@login_required
+def callback():
+    auth_code = request.args.get('code')
+    token_url = "https://oauth2.googleapis.com/token"
+    data = {
+        'code': auth_code,
+        'client_id': current_app.config['CLIENT_SECRETS']['web']['client_id'],
+        'client_secret': current_app.config['CLIENT_SECRETS']['web']['client_secret'],
+        'redirect_uri':  current_app.config['CLIENT_SECRETS']['web']['redirect_uris'][0],
+        'grant_type': 'authorization_code'
+    }
+    r = requests.post(token_url, data=data)
+    token_response = r.json()
+    session['token'] = token_response
+    return redirect(session['last_page'])
+
+@auth.route('/create-file')
+@login_required
+def create_file():
+    current_app.config['DBM'].createFile("Hello World!")
+    return redirect(url_for('views.home'))
+
+@auth.route('/photos-test')
+@login_required
+def photos_test():
+    print(current_app.config['DBM'].retrievePhotos())
+    return redirect(url_for('views.drive'))
+
+
+
 
 
 
