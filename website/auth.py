@@ -100,9 +100,13 @@ def logout():
 @login_required
 def drive_login():
     auth_url = "https://accounts.google.com/o/oauth2/v2/auth"
-    scope = "https://www.googleapis.com/auth/photoslibrary"
+    scopes = [
+        "https://www.googleapis.com/auth/photoslibrary",
+        "https://www.googleapis.com/auth/drive"
+    ]
+    scope_string = ' '.join(scopes)
     redirect_uri = "https://clipsite-amjzx.ondigitalocean.app/auth/google/callback"
-    full_auth_url = f"{auth_url}?response_type=code&client_id={current_app.config['CLIENT_SECRETS']['web']['client_id']}&redirect_uri={current_app.config['CLIENT_SECRETS']['web']['redirect_uris'][0]}&scope={scope}"
+    full_auth_url = f"{auth_url}?response_type=code&client_id={current_app.config['CLIENT_SECRETS']['web']['client_id']}&redirect_uri={current_app.config['CLIENT_SECRETS']['web']['redirect_uris'][0]}&scope={scope_string}"
     return redirect(full_auth_url)
 
 @auth.route('/google/logout')

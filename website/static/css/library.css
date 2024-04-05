@@ -103,8 +103,16 @@ input:-webkit-autofill:active{
 
     
 }
-.msg h4{
+.msg {
     color:white;
     font-size: 20px;
     font-weight: 300;
+}
+.msg a{
+    text-decoration: none;
+    font-weight: 800;
+    color:white;
+}
+.msg a:hover{
+    text-decoration: underline;
 }

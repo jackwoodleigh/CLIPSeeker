@@ -26,6 +26,19 @@ class MediaManager:
             print(f"Similarity: {pair[1]}")
         
         return sorted_image_urls
+    
+    def applyDataSearch(self, search, data, count):
+        similarity = self.imageSimilarity(search, data['features'])
+        sorted_pairs = sorted(zip(data['image_urls'], similarity), key=lambda x: x[1], reverse=True)
+        sorted_image_urls = [url for url, score in sorted_pairs][:count]
+        top_5_pairs = sorted_pairs[:5]
+        return sorted_image_urls
+        
+        return sorted_image_urls
+    # create list of image urls and feature vectors
+    def processImages(self, image_urls):
+        features = self.computeImageFeatures(image_urls)
+        return {'image_urls': image_urls, 'features':features}
 
 
     def computeImageFeatures(self, image_urls):
@@ -34,8 +47,6 @@ class MediaManager:
             images.append(Image.open(requests.get(url, stream=True).raw))
         inputs = self.processor(images=images, return_tensors="pt")
         outputs = self.model.get_image_features(**inputs).tolist()
-        #print(outputs)
-        #session['image_features'] = outputs
         return outputs
     
 
@@ -57,19 +68,3 @@ class MediaManager:
 
         return torch.nn.functional.cosine_similarity(text_features, image_features, dim=1)
 
-
-'''
- def findImages(self, search, image_urls):
-        images = []
-        for url in image_urls:
-            images.append(Image.open(requests.get(url, stream=True).raw))
-        
-        inputs = self.processor(text=search, images=images, return_tensors="pt", padding=True)
-
-        outputs = self.model(**inputs)
-        logits_per_image = outputs.logits_per_image  # this is the image-text similarity score
-        probs = logits_per_image.softmax(dim=1)  #  softmax to get the label probabilities
-        return outputs
-
-
-'''
