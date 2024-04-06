@@ -3,6 +3,7 @@ from flask_login import current_user
 from .auth import login_required
 from functools import wraps
 import json
+import numpy as np
 
 
 
@@ -11,7 +12,7 @@ def save_address(f):
     @wraps(f)
     def decorated_function(*args, **kwargs):
         session['last_page'] = request.url
-        print(session['last_page'])
+        #print(session['last_page'])
         return f(*args, **kwargs)
     return decorated_function
 
@@ -41,24 +42,28 @@ def drive():
 @save_address
 @views.route('/library', methods=['GET', 'POST'])
 def library():
-    
-    images = current_app.config['DBM'].retrievePhotos()
-    
-    
-    if request.method == 'POST' and request.form['search'] != "":
-        search = request.form['search']
+    images = []
+    if 'token' in session:
+        ids, feature_data = current_app.config['DBM'].loadFileIdsToSession()
 
-        data = current_app.config['MM'].processImages(images)
-        print("processed")
-        current_app.config['DBM'].updateLibraryData(data)
-        print("stored")
-        data = current_app.config['DBM'].getLibraryData()
-        print('retrieved')
-        images = current_app.config['MM'].applyDataSearch(search, data, 5)
-        print('searched')
+        photo_data = current_app.config['DBM'].retrievePhotos()
+        # only allows photos that are up to date
+        if photo_data != None and ids != []:
+            images = [v for k, v in photo_data.items() if k in ids]
 
-        #images = current_app.config['MM'].findImages(search, images, 5)
-        #return redirect(url_for('library', session=session,  images=images))
+
+        if request.method == 'POST' and request.form['search'] != "":
+            query = request.form['search']
+            #feature_data = current_app.config['DBM'].getLibraryFeatureData()  
+            if feature_data == None:
+                feature_data = {}
+
+            #feature_data = current_app.config['MM'].loadNewFeatureData(feature_data, photo_data)
+    
+            #current_app.config['DBM'].updateLibraryFeatureData(feature_data)          
+            images = current_app.config['MM'].searchImages(query, photo_data, feature_data, 5)
+
+
     
     return render_template("library.html", session=session,  images=images)
 

@@ -8,6 +8,7 @@ from google.auth.transport.requests import Request
 from googleapiclient.discovery import build
 from googleapiclient.http import MediaIoBaseUpload, MediaIoBaseDownload
 import time, io
+import torch
 
 
 def drive_login_required(f):
@@ -46,24 +47,39 @@ class DatabaseManager:
 
             if credentials.expired and credentials.refresh_token:
                 try:
-                    credentials.refresh(Request())
-                    
+                    #credentials.refresh(Request())
+                    request = Request()
+                    credentials.refresh(request)
                     session['token'] = {
                         'access_token': credentials.token,
                         'refresh_token': credentials.refresh_token
                     }
+                    credentials = Credentials(
+                        token=session['token'].get('access_token'),
+                        refresh_token=session['token'].get('refresh_token'),
+                        token_uri='https://oauth2.googleapis.com/token',
+                        client_id=current_app.config['CLIENT_SECRETS']['web']['client_id'],
+                        client_secret=current_app.config['CLIENT_SECRETS']['web']['client_secret']
+                    )
+
+
                 except Exception as e:
-                    raise(Exception("Failed to refresh token."))
+                    print("Failed to refresh token.")
+                    session.pop('token', None)
+                    return None
             
             
             return credentials
         else:
-            raise(Exception("No token in session."))
+            print(f"Error in getting credentials")
+            return None
+          
         
-
         
-    def getLibraryData(self):
+    def getLibraryFeatureData(self):
         credentials = self.getCredential()
+        if credentials is None:
+            return None
         service = build('drive', 'v3', credentials=credentials)
         filename = 'CLIPbrarian_data.json'
         file_id = self.getFileIdByName(service, filename)
@@ -86,9 +102,16 @@ class DatabaseManager:
 
         fh.seek(0)
         json_data = fh.read().decode('utf-8')
-        return json.loads(json_data)
+        data_dict = json.loads(json_data)
+        tensor_dict = {}
+        for key, value in data_dict.items():
+            tensor_dict[key] = torch.tensor(value, dtype=torch.float)
+
+       
+        #tensor_dict = {key: torch.tensor(value, dtype=torch.float) for key, value in data_dict.items() if isinstance(value, list)}
+        return tensor_dict
         
-    def updateLibraryData(self, data):
+    def updateLibraryFeatureData(self, data):
         credentials = self.getCredential()
         service = build('drive', 'v3', credentials=credentials)
         
@@ -96,12 +119,20 @@ class DatabaseManager:
         filename = 'CLIPbrarian_data.json'
         file_id = self.getFileIdByName(service, filename)
 
-        data = json.dumps(data)
+        ''' print(";")
+        for k, v in data.items():
+            print(f"type v: {type(v[0])}")'''
+        serializable_data = {}
+        for key, value in data.items():
+            serializable_data[key] = [i.tolist() for i in value]
+          
+
+        data = json.dumps(serializable_data)
         fh = io.BytesIO(data.encode('utf-8'))
         media = MediaIoBaseUpload(fh, mimetype='application/json')
 
         # checking if the file is in the drive
-        if file_id:
+        '''if file_id:
             updated_file = service.files().update(
                 fileId=file_id,
                 media_body=media
@@ -109,14 +140,14 @@ class DatabaseManager:
             print(f"Updated existing file '{filename}' with ID {updated_file.get('id')}.")
 
         # if the file does not exist, create a new file
-        else:
-            file_metadata = {'name': filename}
-            new_file = service.files().create(
-                body=file_metadata,
-                media_body=media,
-                fields='id'
-            ).execute()
-            print(f"Created new file '{filename}' with ID {new_file.get('id')}.")
+        else:'''
+        file_metadata = {'name': filename}
+        new_file = service.files().create(
+            body=file_metadata,
+            media_body=media,
+            fields='id'
+        ).execute()
+        print(f"Created new file '{filename}' with ID {new_file.get('id')}.")
 
     def getFileIdByName(self, service, filename):
         query = f"name = '{filename}'"
@@ -124,6 +155,15 @@ class DatabaseManager:
         files = response.get('files', [])
         return files[0].get('id') if files else None
  
+    def loadFileIdsToSession(self):
+        if 'fileids' not in session:
+            feature_data = self.getLibraryFeatureData()  
+            if feature_data != None:
+                return list(feature_data.keys()), feature_data
+            else:
+                return []
+
+
     def retrievePhotos(self):
         try:
             credentials = self.getCredential()
@@ -131,7 +171,7 @@ class DatabaseManager:
             results = photos_service.mediaItems().list(pageSize=100).execute()
 
             items = results.get('mediaItems', [])
-            all_photos = []
+            all_photos = {}
             while 'nextPageToken' in results:
                 page_token = results['nextPageToken']
                 results = photos_service.mediaItems().list(pageSize=100, pageToken=page_token).execute()
@@ -140,7 +180,7 @@ class DatabaseManager:
                     break
 
             for item in items:
-                all_photos.append(item['baseUrl'])
+                all_photos[item['id']] = item['baseUrl']
                 '''all_photos.append({
                     'id': item['id'],
                     'baseUrl': item['baseUrl'], 
@@ -151,7 +191,7 @@ class DatabaseManager:
             return all_photos
         except Exception as e:
             print(f"Error in retrievePhotos: {e}")
-            return []
+            return None
 
 
     def storeMedia(self, media):

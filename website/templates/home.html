@@ -6,17 +6,29 @@
 
 {% block content %}
 <section class="home">
-    <div class="home-text">
-        <h1>CLIPbrarian</h1>
-        <h4>Jack Woodleigh <a href="https://github.com/jackwoodleigh/CLIPsite" target="_blank"><i class="ri-github-fill"></i></a></h4>
+    {% if 'user' in session %}
+        <div class="home-text">
+            <h1>CLIPbrarian</h1>
+            <h4>Jack Woodleigh <a href="https://github.com/jackwoodleigh/CLIPsite" target="_blank"><i class="ri-github-fill"></i></a></h4>
 
-        <p>Secure integration of OpenAI's CLIP with Google Photos to enable users to search their <br>photo library using text-to-image queries.</p>
-        <a href="#">Learn More</a>
-        <a href="#" class="ctaa"><i class="ri-play-fill"></i> Watch Video</a>
-    </div>
-    <div class="home-img">
-        <img src="{{ url_for('static', filename='assets/cat.jpg') }}" alt="Cat">
-    </div>
+            <h2> Welcome! </h2>
+        </div>
+        <div class="home-img">
+            <img src="{{ url_for('static', filename='assets/dog.jpg') }}" alt="Dog">
+        </div>
+    {% else %}
+        <div class="home-text">
+            <h1>CLIPbrarian</h1>
+            <h4>Jack Woodleigh <a href="https://github.com/jackwoodleigh/CLIPsite" target="_blank"><i class="ri-github-fill"></i></a></h4>
+
+            <p>Secure integration of OpenAI's CLIP with Google Photos to enable users to search their <br>photo library using text-to-image queries.</p>
+            <a href="#">Learn More</a>
+            <a href="#" class="ctaa"><i class="ri-play-fill"></i> Watch Video</a>
+        </div>
+        <div class="home-img">
+            <img src="{{ url_for('static', filename='assets/cat.jpg') }}" alt="Cat">
+        </div>
+    {% endif %}
 </section>
 
 {% endblock %}

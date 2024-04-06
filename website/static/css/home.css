@@ -51,11 +51,19 @@
     color: white;
     margin-bottom: 0px;
 }
+.home-text h2{
+    font-size: 80px;
+    font-weight: 500;
+  
+    color: transparent;
+    -webkit-text-stroke-width: 1px;
+    -webkit-text-stroke-color: white;
+    margin-bottom: 0px;
+}
 .home-text p{
     font-size: 15px;
     font-weight: 400;
     color: white;
-    margin-bottom: 40px;
 }
 .home-img img{
     max-width: 300px;
