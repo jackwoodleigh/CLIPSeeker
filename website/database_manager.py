@@ -61,8 +61,6 @@ class DatabaseManager:
                         client_id=current_app.config['CLIENT_SECRETS']['web']['client_id'],
                         client_secret=current_app.config['CLIENT_SECRETS']['web']['client_secret']
                     )
-
-
                 except Exception as e:
                     print("Failed to refresh token.")
                     session.pop('token', None)
@@ -107,21 +105,18 @@ class DatabaseManager:
         for key, value in data_dict.items():
             tensor_dict[key] = torch.tensor(value, dtype=torch.float)
 
-       
-        #tensor_dict = {key: torch.tensor(value, dtype=torch.float) for key, value in data_dict.items() if isinstance(value, list)}
         return tensor_dict
         
     def updateLibraryFeatureData(self, data):
         credentials = self.getCredential()
+        if credentials is None:
+            return None
         service = build('drive', 'v3', credentials=credentials)
         
 
         filename = 'CLIPbrarian_data.json'
         file_id = self.getFileIdByName(service, filename)
 
-        ''' print(";")
-        for k, v in data.items():
-            print(f"type v: {type(v[0])}")'''
         serializable_data = {}
         for key, value in data.items():
             serializable_data[key] = [i.tolist() for i in value]
@@ -149,6 +144,35 @@ class DatabaseManager:
         ).execute()
         print(f"Created new file '{filename}' with ID {new_file.get('id')}.")
 
+
+    def deleteLibraryFeatureData(self):
+        credentials = self.getCredential()
+        if credentials is None:
+            return None
+        service = build('drive', 'v3', credentials=credentials)
+        filename = 'CLIPbrarian_data.json'
+        file_id = self.getFileIdByName(service, filename)
+
+        
+        file_id = self.getFileIdByName(service, filename)
+        
+        if not file_id:
+            print(f"File '{file_id}' does not exist in Google Drive.")
+            return None
+
+        try:
+            # Attempt to delete the file from Google Drive
+            service.files().delete(fileId=file_id).execute()
+            print(f"File '{filename}' has been successfully deleted from Google Drive.")
+        except Exception as e:
+            # Handle exceptions, such as permission errors or network issues
+            print(f"An error occurred: {e}")
+            return None
+
+        return True
+       
+
+
     def getFileIdByName(self, service, filename):
         query = f"name = '{filename}'"
         response = service.files().list(q=query, fields="files(id)").execute()
@@ -156,12 +180,13 @@ class DatabaseManager:
         return files[0].get('id') if files else None
  
     def loadFileIdsToSession(self):
-        if 'fileids' not in session:
-            feature_data = self.getLibraryFeatureData()  
-            if feature_data != None:
-                return list(feature_data.keys()), feature_data
-            else:
-                return []
+        feature_data = self.getLibraryFeatureData()  
+        if feature_data != None:
+            session['fileids'] = True
+            return list(feature_data.keys()), feature_data
+        else:
+            session['fileids'] = False
+            return [], []
 
 
     def retrievePhotos(self):

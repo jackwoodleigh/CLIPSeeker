@@ -15,10 +15,10 @@
         </form>
     </div>
     {% if 'token' not in session %}
-        <div class="msg">Login Here to Google Drive <a href="/drive">Register</a></div> 
+        <div class="msg">Login to Google Drive <a href="/drive"> here </a>.</div> 
         
     {% elif images == []  %}
-        <div class="msg">No images found<a href="/sign-up">Register</a></div>  
+        <div class="msg">No images found. To refresh data click <a href="/drive"> here</a>.</div>  
        
     {% else %}
         <div class="gallery">

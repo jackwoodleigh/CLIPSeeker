@@ -93,7 +93,7 @@ def logout():
     session.pop('token', None)
     session.pop('last_page', None)
     session.pop('fileids', None)
-    return redirect(url_for('view.home'))
+    return redirect(url_for('views.home'))
 
 #############################################################################################
 
@@ -143,6 +143,12 @@ def drive_refresh():
     current_app.config['DBM'].updateLibraryFeatureData(feature_data)   
     return redirect(session['last_page'])
 
+@auth.route('/drive-data-delete')
+@login_required
+def drive_data_delete():
+    current_app.config['DBM'].deleteLibraryFeatureData()
+    session['fileids'] = False
+    return redirect(session['last_page'])
 
 @auth.route('/create-file')
 @login_required

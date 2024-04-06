@@ -46,22 +46,23 @@ def library():
     if 'token' in session:
         ids, feature_data = current_app.config['DBM'].loadFileIdsToSession()
 
-        photo_data = current_app.config['DBM'].retrievePhotos()
-        # only allows photos that are up to date
-        if photo_data != None and ids != []:
-            images = [v for k, v in photo_data.items() if k in ids]
+        if session['fileids']:
+            photo_data = current_app.config['DBM'].retrievePhotos()
+            # only allows photos that are up to date
+            if photo_data != None and ids != []:
+                images = [v for k, v in photo_data.items() if k in ids]
 
 
-        if request.method == 'POST' and request.form['search'] != "":
-            query = request.form['search']
-            #feature_data = current_app.config['DBM'].getLibraryFeatureData()  
-            if feature_data == None:
-                feature_data = {}
+            if request.method == 'POST' and request.form['search'] != "":
+                query = request.form['search']
+                #feature_data = current_app.config['DBM'].getLibraryFeatureData()  
+                if feature_data == None:
+                    feature_data = {}
 
-            #feature_data = current_app.config['MM'].loadNewFeatureData(feature_data, photo_data)
-    
-            #current_app.config['DBM'].updateLibraryFeatureData(feature_data)          
-            images = current_app.config['MM'].searchImages(query, photo_data, feature_data, 5)
+                #feature_data = current_app.config['MM'].loadNewFeatureData(feature_data, photo_data)
+        
+                #current_app.config['DBM'].updateLibraryFeatureData(feature_data)          
+                images = current_app.config['MM'].searchImages(query, photo_data, feature_data, 5)
 
 
     
