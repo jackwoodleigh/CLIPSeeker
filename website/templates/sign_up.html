@@ -10,35 +10,36 @@
     <div class="login-panel">
         <div class="login-text">
             <h1>Sign Up</h1>
+            <form method="POST" action="{{ url_for('auth.sign_up') }}">
+                <div class="input-group">
+                    <input type="email" id="email" name="email" placeholder="Email" required>
+                    <span class="input-icon"><i class="ri-mail-line"></i></span>
+                </div>
 
-            <div class="input-group">
-                <input type="email" id="email" name="email" placeholder="Email" required>
-                <span class="input-icon"><i class="ri-mail-line"></i></span>
-            </div>
+                <div class="input-group">
+                    <input type="text" id="firstname" name="firstname" placeholder="Firstname" required>
+                    <span class="input-icon"><i class="ri-user-line"></i></span>
+                </div>
 
-            <div class="input-group">
-                <input type="text" id="firstname" name="firstname" placeholder="Firstname" required>
-                <span class="input-icon"><i class="ri-user-line"></i></span>
-            </div>
+                <div class="input-group">
+                    <input type="text" id="lastname" name="lastname" placeholder="Lastname" required>
+                    <span class="input-icon"><i class="ri-group-line"></i></span>
+                </div>
 
-            <div class="input-group">
-                <input type="text" id="lastname" name="lastname" placeholder="Lastname" required>
-                <span class="input-icon"><i class="ri-group-line"></i></span>
-            </div>
+                <div class="input-group">
+                    <input type="password" id="password1" name="password1" placeholder="Password" required>
+                    <span class="input-icon"><i class="ri-lock-line"></i></span>
+                </div>
 
-            <div class="input-group">
-                <input type="password" id="password1" name="password1" placeholder="Password" required>
-                <span class="input-icon"><i class="ri-lock-line"></i></span>
-            </div>
+                <div class="input-group">
+                    <input type="password" id="password2" name="password2" placeholder="Password (Confirm)" required>
+                    <span class="input-icon"><i class="ri-lock-line"></i></span>
+                </div>
 
-            <div class="input-group">
-                <input type="password2" id="password2" name="password2" placeholder="Password (Confirm)" required>
-                <span class="input-icon"><i class="ri-lock-line"></i></span>
-            </div>
+                <button type="submit" class="login-button">Sign Up</button>
 
-            <button type="submit" class="login-button">Sign Up</button>
-
-            <div class="signup-link"> Have an Account? <a href="/login">Login</a></div>
+                <div class="signup-link"> Have an Account? <a href="/login">Login</a></div>
+            </form>
 
         </div>
 

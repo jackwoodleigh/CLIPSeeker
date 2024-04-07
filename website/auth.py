@@ -60,7 +60,9 @@ def login():
 @auth.route('/sign-up', methods=['GET', 'POST']) # home page aka website {domain}/ 
 @logout_required
 def sign_up():
+    
     if request.method == 'POST':
+        print("yo")
         email = request.form.get('email')
         firstname = request.form.get('firstname')
         lastname = request.form.get('lastname')
@@ -69,15 +71,15 @@ def sign_up():
         user = current_app.config['DBM'].SF.query_all("SELECT Email__c FROM CLIPAccount__c WHERE Email__c = '{}'".format(email))
         
         if user['records']:
-            pass #flash('Email already Exists', category='error')
+            print('Email already Exists')
         elif len(email) < 4:
-            pass #flash('Email must be at least 4 characters', category='error') #cat can be anything
+            print('Email must be at least 4 characters')
         elif len(firstname) < 2:
-            pass #flash('Username must be at least 2 characters', category='error') 
+            print('Username must be at least 2 characters')
         elif len(lastname) < 2:
-            pass #flash('Username must be at least 2 characters', category='error') 
+            print('Username must be at least 2 characters')
         elif password1 != password2:
-            pass #flash('Passwords don\'t match', category='error') 
+            print('Passwords don\'t match')
         elif len(password1) < 4:
             pass #flash('Password must be at least 4 characters', category='error') 
         else:
@@ -100,6 +102,7 @@ def logout():
 @auth.route('/google/login')
 @login_required
 def drive_login():
+    session.pop('token', None)
     auth_url = "https://accounts.google.com/o/oauth2/v2/auth"
     scopes = [
         "https://www.googleapis.com/auth/photoslibrary",
@@ -107,7 +110,7 @@ def drive_login():
     ]
     scope_string = ' '.join(scopes)
     redirect_uri = "https://clipsite-amjzx.ondigitalocean.app/auth/google/callback"
-    full_auth_url = f"{auth_url}?response_type=code&client_id={current_app.config['CLIENT_SECRETS']['web']['client_id']}&redirect_uri={current_app.config['CLIENT_SECRETS']['web']['redirect_uris'][0]}&scope={scope_string}"
+    full_auth_url = f"{auth_url}?response_type=code&client_id={current_app.config['CLIENT_SECRETS']['web']['client_id']}&redirect_uri={current_app.config['CLIENT_SECRETS']['web']['redirect_uris'][0]}&scope={scope_string}&prompt=select_account"
     return redirect(full_auth_url)
 
 @auth.route('/google/logout')
